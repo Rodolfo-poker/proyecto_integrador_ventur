@@ -12,11 +12,16 @@ No necesita instalar nada más.
       usuario.py                 Usuario y Plan
       marca.py                   nombre y eslogan
       modulos.py                 lista de módulos (aquí se agregan/quitan)
+      productos.py               Producto y RepositorioProductos (datos de ejemplo)
+      venta.py                   la venta en curso de Caja
     views/                       todo lo visual, sin lógica de negocio
       tema.py                    colores, fuentes, rectángulos redondeados
       componentes.py             TarjetaModulo, Boton
       vista_dashboard.py         panel de control
-      vista_modulo.py            pantalla provisional de cada módulo
+      vista_base.py              barra superior + cuerpo común de los módulos
+      vista_productos.py         módulo Productos
+      vista_caja.py              módulo Caja
+      vista_modulo.py            pantalla provisional de los módulos sin construir
       ventana_principal.py       ventana raíz
     controllers/
       app_controller.py          une modelos y vistas, maneja la navegación
@@ -27,4 +32,4 @@ No necesita instalar nada más.
 
 1. Añade un `Modulo(...)` en `models/modulos.py`.
 2. Pon su icono en `assets/iconos/<id>.png` (blanco sobre transparente, ~28 px).
-3. En `AppController.abrir_modulo` cambia la pantalla provisional por la vista real.
+3. Crea su vista (hereda de `VistaBase`) y en `AppController.abrir_modulo` añade un `elif modulo.id == "..."`.

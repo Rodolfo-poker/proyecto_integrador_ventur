@@ -1,6 +1,7 @@
 """Colores, tipografías y utilidades de dibujo compartidas por todas las vistas."""
 import sys
 import tkinter as tk
+from tkinter import ttk
 from pathlib import Path
 
 RAIZ = Path(__file__).resolve().parent.parent
@@ -17,6 +18,7 @@ ENCABEZADO = "#1B1D24"
 ENCABEZADO_PILDORA = "#2C2F3A"
 ENCABEZADO_TEXTO_SUAVE = "#A9AEBB"
 VERDE = "#3DDC97"
+ERROR = "#B42318"
 BLANCO = "#FFFFFF"
 
 
@@ -48,3 +50,22 @@ def rect_redondeado(canvas, x1, y1, x2, y2, r, **opciones):
         x1, y2, x1, y2 - r, x1, y1 + r, x1, y1,
     ]
     return canvas.create_polygon(puntos, smooth=True, **opciones)
+
+
+def dinero(valor):
+    """1200 -> '$1,200.00'"""
+    return f"${valor:,.2f}"
+
+
+def aplicar_estilos(raiz):
+    """Estilo de las tablas (ttk.Treeview) acorde a la marca."""
+    estilo = ttk.Style(raiz)
+    estilo.theme_use("clam")  # el tema por defecto de Windows ignora los colores
+    estilo.configure("Ventur.Treeview", background=TARJETA, fieldbackground=TARJETA,
+                     foreground=TINTA, rowheight=38, borderwidth=0, font=fuente(11))
+    estilo.layout("Ventur.Treeview", [("Treeview.treearea", {"sticky": "nswe"})])
+    estilo.map("Ventur.Treeview",
+               background=[("selected", TINTA)], foreground=[("selected", BLANCO)])
+    estilo.configure("Ventur.Treeview.Heading", background=TINTA, foreground=BLANCO,
+                     relief="flat", borderwidth=0, padding=(12, 9), font=fuente(10, "bold"))
+    estilo.map("Ventur.Treeview.Heading", background=[("active", "#32353F")])

@@ -55,16 +55,20 @@ class TarjetaModulo(tk.Canvas):
 
 
 class Boton(tk.Label):
-    """Botón plano (los tk.Button ignoran los colores en macOS)."""
+    """Botón plano (los tk.Button ignoran los colores en macOS y Windows)."""
 
-    def __init__(self, parent, texto, comando):
+    def __init__(self, parent, texto, comando, secundario=False):
+        self._fondo = tema.TARJETA if secundario else tema.TINTA
+        self._fondo_hover = tema.FONDO if secundario else "#32353F"
         super().__init__(
-            parent, text=texto, bg=tema.TINTA, fg=tema.BLANCO, font=tema.fuente(11, "bold"),
-            padx=18, pady=9, cursor="hand2", takefocus=True,
+            parent, text=texto, bg=self._fondo,
+            fg=tema.TINTA if secundario else tema.BLANCO,
+            font=tema.fuente(11, "bold"), padx=18, pady=9, cursor="hand2", takefocus=True,
+            highlightthickness=1 if secundario else 0,
+            highlightbackground=tema.BORDE,
         )
         self.bind("<Button-1>", lambda _e: comando())
         self.bind("<Return>", lambda _e: comando())
         self.bind("<space>", lambda _e: comando())
-        self.bind("<Enter>", lambda _e: self.config(bg="#32353F"))
-        self.bind("<Leave>", lambda _e: self.config(bg=tema.TINTA))
-
+        self.bind("<Enter>", lambda _e: self.config(bg=self._fondo_hover))
+        self.bind("<Leave>", lambda _e: self.config(bg=self._fondo))

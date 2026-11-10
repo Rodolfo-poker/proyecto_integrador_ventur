@@ -12,6 +12,7 @@ class VentanaPrincipal(tk.Tk):
         self.title(titulo)
         self.configure(bg=tema.FONDO)
         self.minsize(960, 660)
+        tema.aplicar_estilos(self)
         self._centrar()
         try:
             self._icono = tema.cargar_imagen("icono_app.png")
