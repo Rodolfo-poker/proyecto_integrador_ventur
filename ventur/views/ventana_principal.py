@@ -1,0 +1,35 @@
+"""Vista: ventana raíz. Solo sabe mostrar una vista a la vez."""
+import tkinter as tk
+
+from . import tema
+
+
+class VentanaPrincipal(tk.Tk):
+    ANCHO, ALTO = 1120, 780
+
+    def __init__(self, titulo):
+        super().__init__()
+        self.title(titulo)
+        self.configure(bg=tema.FONDO)
+        self.minsize(960, 660)
+        self._centrar()
+        try:
+            self._icono = tema.cargar_imagen("icono_app.png")
+            self.iconphoto(True, self._icono)
+        except tk.TclError:
+            pass  # el icono es opcional
+
+        self.contenedor = tk.Frame(self, bg=tema.FONDO)
+        self.contenedor.pack(fill="both", expand=True)
+        self._vista_actual = None
+
+    def _centrar(self):
+        x = (self.winfo_screenwidth() - self.ANCHO) // 2
+        y = max(0, (self.winfo_screenheight() - self.ALTO) // 2 - 20)
+        self.geometry(f"{self.ANCHO}x{self.ALTO}+{x}+{y}")
+
+    def mostrar(self, vista):
+        if self._vista_actual is not None:
+            self._vista_actual.destroy()
+        self._vista_actual = vista
+        vista.pack(fill="both", expand=True)
