@@ -1,6 +1,6 @@
 """Modelo: la venta en curso (el carrito de la Caja)."""
 from dataclasses import dataclass
-from typing import Dict, List
+from typing import Dict, List, Optional
 
 from .productos import Producto
 
@@ -13,6 +13,11 @@ class LineaVenta:
     @property
     def subtotal(self) -> float:
         return self.producto.precio * self.cantidad
+
+    @property
+    def restantes(self) -> int:
+        """Piezas que quedarían en inventario si se cobrara esta venta."""
+        return self.producto.existencia - self.cantidad
 
 
 class Venta:
@@ -31,6 +36,9 @@ class Venta:
     def vacia(self) -> bool:
         return not self._lineas
 
+    def linea(self, id_producto: str) -> Optional[LineaVenta]:
+        return self._lineas.get(id_producto)
+
     def agregar(self, producto: Producto) -> bool:
         """Suma una unidad. Devuelve False si ya no hay existencias."""
         linea = self._lineas.get(producto.id)
@@ -42,6 +50,20 @@ class Venta:
         else:
             self._lineas[producto.id] = LineaVenta(producto)
         return True
+
+    def cambiar_cantidad(self, id_producto: str, delta: int) -> bool:
+        """Suma o resta piezas. La cantidad se queda entre 1 y la existencia."""
+        linea = self._lineas.get(id_producto)
+        if linea is None:
+            return False
+        nueva = linea.cantidad + delta
+        if nueva < 1 or nueva > linea.producto.existencia:
+            return False
+        linea.cantidad = nueva
+        return True
+
+    def quitar(self, id_producto: str) -> None:
+        self._lineas.pop(id_producto, None)
 
     def limpiar(self) -> None:
         self._lineas.clear()

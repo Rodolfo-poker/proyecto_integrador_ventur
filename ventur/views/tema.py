@@ -1,25 +1,40 @@
-"""Colores, tipografías y utilidades de dibujo compartidas por todas las vistas."""
+"""Colores, tipografías y utilidades de dibujo compartidas por todas las vistas.
+
+La paleta sale de los mockups (Ventur_Mockup_*.svg).
+Los tamaños de letra están en PÍXELES, igual que en los mockups.
+"""
 import sys
 import tkinter as tk
-from tkinter import ttk
 from pathlib import Path
+from tkinter import ttk
 
 RAIZ = Path(__file__).resolve().parent.parent
 ASSETS = RAIZ / "assets"
 
-# Paleta tomada del logo: negro azulado sobre blanco.
-FONDO = "#F3F4F7"
+# --- Base ---
+FONDO = "#F8FAFC"
 TARJETA = "#FFFFFF"
-TARJETA_HOVER = "#F8F8FB"
-BORDE = "#E3E5EB"
-TINTA = "#1B1D24"
-TINTA_SUAVE = "#6A6F7D"
-ENCABEZADO = "#1B1D24"
-ENCABEZADO_PILDORA = "#2C2F3A"
-ENCABEZADO_TEXTO_SUAVE = "#A9AEBB"
-VERDE = "#3DDC97"
-ERROR = "#B42318"
+BORDE = "#E2E8F0"
+TINTA = "#111827"
+TINTA_SUAVE = "#475569"
 BLANCO = "#FFFFFF"
+FILA_ALTERNA = "#F8FAFC"
+
+# --- Campos y botones ---
+CAMPO_BORDE = "#64748B"
+CAMPO_SOLO_LECTURA = "#F1F5F9"
+BOTON_PRIMARIO_HOVER = "#1F2937"
+
+# --- Encabezado del panel ---
+HERO_PILDORA = "#1F2937"
+HERO_TEXTO = "#E2E8F0"
+VERDE_PUNTO = "#22C55E"
+
+# --- Estados ---
+OK_FONDO, OK_TEXTO = "#DCFCE7", "#166534"
+AVISO_FONDO, AVISO_BORDE, AVISO_TEXTO = "#FEF3C7", "#D97706", "#92400E"
+ERROR_FONDO, ERROR_BORDE, ERROR_TEXTO = "#FEE2E2", "#B91C1C", "#991B1B"
+ROJO = "#B91C1C"
 
 
 def _familia():
@@ -33,8 +48,9 @@ def _familia():
 FAMILIA = _familia()
 
 
-def fuente(tamano, peso="normal"):
-    return (FAMILIA, tamano, peso)
+def fuente(px, peso="normal"):
+    """Fuente por tamaño en píxeles (el signo negativo le indica a tk que son px)."""
+    return (FAMILIA, -px, peso)
 
 
 def cargar_imagen(ruta_relativa):
@@ -58,14 +74,10 @@ def dinero(valor):
 
 
 def aplicar_estilos(raiz):
-    """Estilo de las tablas (ttk.Treeview) acorde a la marca."""
+    """Estilo de las barras de desplazamiento (ttk)."""
     estilo = ttk.Style(raiz)
     estilo.theme_use("clam")  # el tema por defecto de Windows ignora los colores
-    estilo.configure("Ventur.Treeview", background=TARJETA, fieldbackground=TARJETA,
-                     foreground=TINTA, rowheight=38, borderwidth=0, font=fuente(11))
-    estilo.layout("Ventur.Treeview", [("Treeview.treearea", {"sticky": "nswe"})])
-    estilo.map("Ventur.Treeview",
-               background=[("selected", TINTA)], foreground=[("selected", BLANCO)])
-    estilo.configure("Ventur.Treeview.Heading", background=TINTA, foreground=BLANCO,
-                     relief="flat", borderwidth=0, padding=(12, 9), font=fuente(10, "bold"))
-    estilo.map("Ventur.Treeview.Heading", background=[("active", "#32353F")])
+    estilo.configure("Vertical.TScrollbar", background="#CBD5E1", troughcolor=TARJETA,
+                     bordercolor=TARJETA, lightcolor="#CBD5E1", darkcolor="#CBD5E1",
+                     arrowcolor=TINTA, relief="flat", gripcount=0)
+    estilo.map("Vertical.TScrollbar", background=[("active", "#94A3B8")])

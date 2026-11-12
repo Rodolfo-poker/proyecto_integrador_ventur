@@ -49,12 +49,12 @@ class Pincel:
         self.img.resize((TAM_FINAL, TAM_FINAL), Image.LANCZOS).save(SALIDA / f"{nombre}.png")
 
 
-def apartados():
+def productos():
     p = Pincel()
-    p.rect(26, 38, 166, 80, 12)
-    p.rect(40, 80, 152, 156, 12)
-    p.linea((80, 108), (112, 108))
-    p.guardar("apartados")
+    p.linea((96, 26), (156, 61), (156, 131), (96, 166), (36, 131), (36, 61), cerrada=True)
+    p.linea((36, 61), (96, 96), (156, 61))
+    p.linea((96, 96), (96, 166))
+    p.guardar("productos")
 
 
 def caja():
@@ -65,88 +65,60 @@ def caja():
     p.guardar("caja")
 
 
-def categorias():
+def movimientos():
     p = Pincel()
-    for x, y in ((28, 28), (108, 28), (28, 108), (108, 108)):
-        p.rect(x, y, x + 56, y + 56, 12)
-    p.guardar("categorias")
+    p.linea((62, 152), (62, 44))
+    p.linea((36, 70), (62, 44), (88, 70))
+    p.linea((130, 40), (130, 148))
+    p.linea((104, 122), (130, 148), (156, 122))
+    p.guardar("movimientos")
 
 
-def clientes():
+def alertas():
+    p = Pincel()
+    p.linea((96, 28), (170, 156), (22, 156), cerrada=True)
+    p.linea((96, 72), (96, 112))
+    p.circulo(96, 136, 6, relleno=True)
+    p.guardar("alertas")
+
+
+def historial():
+    p = Pincel()
+    p.circulo(96, 96, 66)
+    p.linea((96, 56), (96, 98), (126, 116))
+    p.guardar("historial")
+
+
+def respaldo():
+    p = Pincel()
+    p.linea((96, 30), (96, 122))
+    p.linea((58, 86), (96, 124), (134, 86))
+    p.linea((36, 158), (156, 158))
+    p.guardar("respaldo")
+
+
+def reporte():
+    p = Pincel()
+    p.linea((52, 150), (52, 104))
+    p.linea((96, 150), (96, 50))
+    p.linea((140, 150), (140, 84))
+    p.linea((28, 164), (164, 164))
+    p.guardar("reporte")
+
+
+def empleados():
     p = Pincel()
     p.circulo(80, 66, 26)
     p.arco((30, 108, 130, 208), 180, 360)
     p.circulo(140, 78, 18)
     p.arco((116, 112, 170, 170), 200, 340)
-    p.guardar("clientes")
-
-
-def comisiones():
-    p = Pincel()
-    p.circulo(60, 60, 20)
-    p.circulo(132, 132, 20)
-    p.linea((152, 40), (40, 152))
-    p.guardar("comisiones")
-
-
-def descuentos():
-    p = Pincel()
-    p.linea((36, 36), (100, 36), (160, 96), (100, 156), (36, 96), cerrada=True)
-    p.circulo(72, 72, 8, relleno=True)
-    p.guardar("descuentos")
-
-
-def marcas():
-    p = Pincel()
-    p.linea((56, 30), (136, 30), (136, 162), (96, 128), (56, 162), cerrada=True)
-    p.guardar("marcas")
-
-
-def ordenes():
-    p = Pincel()
-    p.rect(44, 42, 148, 166, 16)
-    p.rect(72, 24, 120, 56, 10)
-    p.linea((68, 98), (124, 98))
-    p.linea((68, 130), (124, 130))
-    p.guardar("ordenes")
-
-
-def productos():
-    p = Pincel()
-    p.linea((96, 26), (156, 61), (156, 131), (96, 166), (36, 131), (36, 61), cerrada=True)
-    p.linea((36, 61), (96, 96), (156, 61))
-    p.linea((96, 96), (96, 166))
-    p.guardar("productos")
-
-
-def registros():
-    p = Pincel()
-    p.rect(38, 28, 154, 164, 16)
-    p.linea((66, 70), (126, 70))
-    p.linea((66, 98), (126, 98))
-    p.linea((66, 126), (104, 126))
-    p.guardar("registros")
-
-
-def tickets():
-    p = Pincel()
-    p.rect(22, 50, 170, 142, 16)
-    for y in range(66, 132, 22):
-        p.linea((122, y), (122, y + 8))
-    p.linea((50, 82), (92, 82))
-    p.linea((50, 110), (80, 110))
-    p.guardar("tickets")
-
-
-def verificacion():
-    p = Pincel()
-    p.rect(30, 30, 162, 162, 20)
-    p.linea((62, 98), (88, 124), (132, 70))
-    p.guardar("verificacion")
+    p.guardar("empleados")
 
 
 if __name__ == "__main__":
-    for fn in (apartados, caja, categorias, clientes, comisiones, descuentos,
-               marcas, ordenes, productos, registros, tickets, verificacion):
+    for archivo in SALIDA.glob("*.png"):   # borra iconos viejos
+        archivo.unlink()
+    for fn in (productos, caja, movimientos, alertas, empleados,
+               historial, respaldo, reporte):
         fn()
     print(f"Iconos generados en {SALIDA}")
