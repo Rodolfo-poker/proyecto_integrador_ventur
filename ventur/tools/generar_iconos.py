@@ -11,9 +11,9 @@ from pathlib import Path
 
 from PIL import Image, ImageDraw
 
-SALIDA = Path(__file__).resolve().parent.parent / "assets" / "iconos"
+SALIDA = Path(__file__).resolve().parent.parent / "src" / "assets"
 LIENZO = 192          # se dibuja grande y se reduce (suaviza los bordes)
-TAM_FINAL = 28        # tamaño del icono dentro de la tarjeta
+TAM_FINAL = 84        # 3x: en pantalla se muestran a 28 px y así se ven nítidos
 TRAZO = 13
 BLANCO = (255, 255, 255, 255)
 
@@ -46,7 +46,7 @@ class Pincel:
 
     def guardar(self, nombre):
         SALIDA.mkdir(parents=True, exist_ok=True)
-        self.img.resize((TAM_FINAL, TAM_FINAL), Image.LANCZOS).save(SALIDA / f"{nombre}.png")
+        self.img.resize((TAM_FINAL, TAM_FINAL), Image.LANCZOS).save(SALIDA / f"icono_{nombre}.png")
 
 
 def productos():
@@ -116,7 +116,7 @@ def empleados():
 
 
 if __name__ == "__main__":
-    for archivo in SALIDA.glob("*.png"):   # borra iconos viejos
+    for archivo in SALIDA.glob("icono_*.png"):   # borra iconos viejos (no toca los logos)
         archivo.unlink()
     for fn in (productos, caja, movimientos, alertas, empleados,
                historial, respaldo, reporte):

@@ -1,52 +1,59 @@
-# Ventur (tkinter + MVC)
+# Ventur (Flet + MVC)
 
-Requiere Python 3.8+ con tkinter (viene incluido en python.org). No necesita instalar nada más.
+Control de inventario y ventas para tableta Android. Funciona sin internet.
 
-    python main.py
-
-## Acceso
+## Acceso de prueba
 
 | Usuario | Contraseña | Rol   |
 |---------|------------|-------|
 | admin   | admin123   | Dueña |
 
-Cambia la contraseña en `models/autenticacion.py` (`CONTRASENA_DUENA`). Es una cuenta de
-desarrollo: antes de usar el sistema de verdad conviene cambiarla.
+Cambia la contraseña en `src/models/autenticacion.py`. Para agregar un empleado hay un
+ejemplo comentado en `RepositorioUsuarios.__init__`.
+
+## Correr en la computadora
+
+    pip install "flet[all]==1.1.0"
+    cd ventur
+    flet run
+
+## Verla en la tableta mientras programas
+
+Instala la app **Flet** en la tableta (misma red Wi-Fi que la computadora) y corre:
+
+    flet run --android
+
+## Generar el APK
+
+    flet build apk
+
+La primera vez descarga Flutter y el SDK de Android (tarda y pesa varios GB).
+El APK queda en `build/apk/`.
 
 ## Estructura
 
-    main.py                       punto de entrada
-    models/                       datos y reglas, sin tkinter
-      usuario.py                  Usuario y Rol (Dueña / Empleado)
-      autenticacion.py            cuentas y verificación de contraseña (con hash)
-      modulos.py                  módulos del panel y qué rol los ve
-      productos.py                Producto (con estado) y RepositorioProductos
-      venta.py                    la venta en curso de Caja
-      marca.py                    nombre y eslogan
-    views/                        todo lo visual
-      tema.py                     paleta de los mockups, fuentes, utilidades
-      componentes.py              Boton, Campo, Selector, Pildora, Aviso, TarjetaModulo...
-      tabla.py                    tabla con botones y píldoras dentro de las filas
-      vista_login.py              inicio de sesión
-      vista_dashboard.py          panel de control (según rol)
-      vista_base.py               barra "Volver al panel" + cuerpo común de los módulos
-      vista_productos.py          módulo Productos
-      vista_caja.py               módulo Caja
-      formulario_producto.py      ventana de nuevo / editar producto
-      vista_modulo.py             pantalla provisional de módulos sin construir
-      ventana_principal.py        ventana raíz
-    controllers/
-      app_controller.py           une modelos y vistas: sesión, navegación, Productos, Caja
-    assets/                       logo (versiones clara y oscura) e iconos
-    tools/generar_iconos.py       regenera los iconos (solo si usas Pillow)
+    pyproject.toml                  nombre, versión y configuración del APK
+    src/
+      main.py                       punto de entrada
+      models/                       datos y reglas (igual que en la versión tkinter)
+      controllers/app_controller.py sesión, navegación, Productos y Caja
+      views/
+        tema.py                     paleta de los mockups
+        componentes.py              texto, botón, píldora, aviso, campo, selector
+        tabla.py                    encabezado y filas de las tablas
+        ventana.py                  muestra una vista a la vez; diálogos
+        vista_login.py  vista_dashboard.py  vista_base.py
+        vista_productos.py  vista_caja.py  formulario_producto.py  vista_modulo.py
+      assets/                       logos, iconos e icon.png (icono de la app)
+    tools/generar_iconos.py         regenera los iconos (necesita Pillow)
 
-## Agregar un módulo
+## Cómo se conectan las piezas
 
-1. Añade un `Modulo(...)` en `models/modulos.py` (`solo_duena=True` si el empleado no debe verlo).
-2. Pon su icono en `assets/iconos/<id>.png` (blanco sobre transparente, 28 px).
-3. Crea su vista (hereda de `VistaBase`) y añade un `elif modulo.id == "..."` en
-   `AppController.abrir_modulo`.
+Cada vista es una clase con un atributo `.control` (lo que se dibuja). El controlador crea
+la vista, se la da a `Ventana.mostrar()` y la actualiza cuando cambian los datos.
+Las vistas nunca importan al controlador: reciben funciones (`al_agregar`, `al_cobrar`...).
 
-## Agregar un empleado
+## Importante para SQLite
 
-En `RepositorioUsuarios.__init__` (`models/autenticacion.py`) hay un ejemplo comentado.
+En el APK, los archivos de la app son de solo lectura. La base de datos tiene que guardarse
+en la carpeta que indica la variable de entorno `FLET_APP_STORAGE_DATA`, no junto al código.
